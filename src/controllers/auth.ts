@@ -4,8 +4,33 @@ import { createUser, findUserByEmail } from '../db/index';
 import {random, hash} from '../helpers/index'
 
 
-export function login(req : express.Request, res:express.Response){
-    
+/*
+
+while loggin in, the user will give the email, password. 
+need to verify and then generate a session token and save it in the db. 
+
+*/ 
+export async function login(req : express.Request, res:express.Response){
+    const {email, password} = req.body;
+
+    const user = await findUserByEmail(email).select('+authentication.salt +authentication.password')
+
+    if(!user){
+        return res.sendStatus(403)
+    }
+
+    const expected_hash = hash(password, user.authentication.salt)
+
+    if (expected_hash === user.authentication.password){
+        user.authentication.sessionToken = random()
+        
+        await user.save()   
+
+        return res.send("logged in successfully")
+    }
+    else{
+        res.send("wrong password")
+    }
     
 }
 
