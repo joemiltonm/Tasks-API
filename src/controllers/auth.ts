@@ -2,6 +2,7 @@
 import express from 'express';
 import { createUser, findUserByEmail, findUserByToken } from '../db/index';
 import {random, hash} from '../helpers/index'
+//import jwt from 'jsonwebtoken';
 
 
 /*
