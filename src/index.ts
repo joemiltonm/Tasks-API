@@ -6,15 +6,18 @@ import compression from 'compression';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import router from './routes/index'
+import dotenv from 'dotenv'
 
 const app = express()
+
+dotenv.config()
 
 app.use(cors())
 app.use(compression())
 app.use(cookieParser())
 app.use(bodyParser.json())
 
-mongoose.connect('mongodb+srv://mjoemilton:WAnpmpJqUhVD1E0h@cluster0.schtnpz.mongodb.net/tasks')
+mongoose.connect(process.env.MONGO_URL)
 
 mongoose.connection.on('error', () => {
     console.log("error occured in Mongo db")
