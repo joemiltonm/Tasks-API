@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { createUser, findUserByEmail } from '../db/index';
+import { createUser, findUserByEmail, findUserByToken } from '../db/index';
 import {random, hash} from '../helpers/index'
 
 
@@ -22,7 +22,9 @@ export async function login(req : express.Request, res:express.Response){
     const expected_hash = hash(password, user.authentication.salt)
 
     if (expected_hash === user.authentication.password){
-        user.authentication.sessionToken = random()
+        const token = random()
+        user.authentication.sessionToken = token
+        res.cookie("auth", token)
         
         await user.save()   
 
@@ -34,8 +36,20 @@ export async function login(req : express.Request, res:express.Response){
     
 }
 
-export function logout(req : express.Request, res:express.Response){
-    
+
+// when the user hits logout, the token has to be removed from the database and cookie. 
+
+
+export const logout = async(req : express.Request, res:express.Response) => {
+    const token = req.cookies['auth']
+    const user = await findUserByToken(token)
+
+    if(user){
+        user.authentication.sessionToken = null
+        user.save()
+    }
+    res.cookie("auth", null)
+    return res.send("logged out successfully")
 }
 
 /* while signing up, the use would give the following details 

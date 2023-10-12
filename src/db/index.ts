@@ -23,3 +23,6 @@ export const createUser = (credentials:Record<string, any>) => {
 
 export const findUserByEmail = (email:string) => user.findOne({email})
 
+export const findUserByToken = (token:String) => user.findOne({'authentication.sessionToken' : token})
+
+
