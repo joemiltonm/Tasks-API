@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import router from './routes/index'
 
 const app = express()
 
@@ -20,6 +21,7 @@ mongoose.connection.on('error', () => {
 })
 
 
+app.use('/', router())
 
 app.listen(3000, () => {
     console.log("server started")
