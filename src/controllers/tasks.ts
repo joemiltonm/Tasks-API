@@ -18,7 +18,7 @@ export const searchTask = async (req:express.Request, res:express.Response) => {
     const tasks = await findTasks({
         completionStatus,
         createdBy
-    })
+    }).select('task')
 
     return res.json(tasks)
 
