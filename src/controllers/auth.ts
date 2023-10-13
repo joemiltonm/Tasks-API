@@ -49,7 +49,7 @@ export const logout = async(req : express.Request, res:express.Response) => {
         user.authentication.sessionToken = null
         user.save()
     }
-    res.cookie("auth", null)
+    res.clearCookie('auth');
     return res.send("logged out successfully")
 }
 

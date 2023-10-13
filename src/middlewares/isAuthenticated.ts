@@ -3,18 +3,21 @@ import express, { NextFunction } from 'express';
 import { findUserByToken } from '../db/index';
 
 
-export const isAuthenticated = (req:express.Request, res:express.Response, next:NextFunction) => {
+export const isAuthenticated = async (req:express.Request, res:express.Response, next:NextFunction) => {
 
     const token = req.cookies['auth'];
 
-    const user = findUserByToken(token);
-    req.body.user = user
+    if(!token){
+        return res.send("login to add tasks")
+    }
+
+    const user = await findUserByToken(token);
+    req.body.createdBy = user._id
     
     if(!user){
-        res.sendStatus(403)
+        return res.sendStatus(403)
     }
     else{
-        req.body.user = user
         next()        
     }
 }

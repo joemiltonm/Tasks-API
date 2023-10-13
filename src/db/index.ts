@@ -46,8 +46,10 @@ export const findUserByEmail = (email:string) => user.findOne({email})
 
 export const findUserByToken = (token:String) => user.findOne({'authentication.sessionToken' : token})
 
-export const createTask = (taskDetails:Record<string,any>) => {
+export const newTask = (taskDetails:Record<string,any>) => {
     new task(taskDetails).save()
 }
+
+export const findTasks = (searchDetails:Record<string,any>) => task.find(searchDetails)
 
 
